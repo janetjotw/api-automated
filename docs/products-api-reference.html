@@ -1,0 +1,846 @@
+<title>Products API Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Source+Sans+3:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --surface:#ffffff;
+    --surface-2:#eef0f6;
+    --border:#dfe3ec;
+    --text:#181b23;
+    --text-dim:#565d70;
+    --text-faint:#8991a6;
+    --accent:#3c4fe0;
+    --accent-ink:#2c3ba6;
+    --accent-soft:#ecefff;
+    --code-bg:#12141c;
+    --code-text:#dfe3f0;
+    --code-border:#2a2e3d;
+    --get:#1c64d6;
+    --get-soft:#e8f0fd;
+    --post:#12875a;
+    --post-soft:#e6f6ee;
+    --put:#b6650a;
+    --put-soft:#fbf0df;
+    --delete:#c62f3a;
+    --delete-soft:#fbe9ea;
+    --shadow: 0 1px 2px rgba(20,23,35,.04), 0 8px 24px rgba(20,23,35,.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12141b;
+      --surface:#191c26;
+      --surface-2:#1f2330;
+      --border:#2c3040;
+      --text:#e9ebf3;
+      --text-dim:#a7adc0;
+      --text-faint:#767d92;
+      --accent:#7c8bff;
+      --accent-ink:#c2c9ff;
+      --accent-soft:#232a52;
+      --code-bg:#0c0e14;
+      --code-text:#d9dcea;
+      --code-border:#2a2e3d;
+      --get:#5b9dff;
+      --get-soft:#1b2740;
+      --post:#3ecf8e;
+      --post-soft:#153327;
+      --put:#e2a044;
+      --put-soft:#3a2c14;
+      --delete:#f0707c;
+      --delete-soft:#3a1b1f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12141b;
+    --surface:#191c26;
+    --surface-2:#1f2330;
+    --border:#2c3040;
+    --text:#e9ebf3;
+    --text-dim:#a7adc0;
+    --text-faint:#767d92;
+    --accent:#7c8bff;
+    --accent-ink:#c2c9ff;
+    --accent-soft:#232a52;
+    --code-bg:#0c0e14;
+    --code-text:#d9dcea;
+    --code-border:#2a2e3d;
+    --get:#5b9dff;
+    --get-soft:#1b2740;
+    --post:#3ecf8e;
+    --post-soft:#153327;
+    --put:#e2a044;
+    --put-soft:#3a2c14;
+    --delete:#f0707c;
+    --delete-soft:#3a1b1f;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  h1,h2,h3,h4{
+    font-family:"Manrope", ui-sans-serif, system-ui, sans-serif;
+    color:var(--text);
+    text-wrap:balance;
+    margin:0;
+  }
+  code, .mono{
+    font-family:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  a{color:var(--accent);}
+  p{margin:0;}
+
+  .shell{
+    max-width:1180px;
+    margin:0 auto;
+    padding:2.5rem 1.75rem 6rem;
+    display:grid;
+    grid-template-columns:248px minmax(0,1fr);
+    gap:3rem;
+    align-items:start;
+  }
+
+  /* ---- Sidebar ---- */
+  .sidebar{
+    position:sticky;
+    top:2rem;
+    display:flex;
+    flex-direction:column;
+    gap:1.75rem;
+    align-self:start;
+  }
+  .brand{
+    display:flex;
+    flex-direction:column;
+    gap:.15rem;
+  }
+  .brand .mark{
+    font-family:"Manrope";
+    font-weight:800;
+    font-size:1.05rem;
+    letter-spacing:-.01em;
+  }
+  .brand .ver{
+    font-family:"JetBrains Mono";
+    font-size:.72rem;
+    color:var(--text-faint);
+  }
+  nav.toc{
+    display:flex;
+    flex-direction:column;
+    gap:1.4rem;
+    border-top:1px solid var(--border);
+    padding-top:1.4rem;
+  }
+  .toc-group{
+    display:flex;
+    flex-direction:column;
+    gap:.4rem;
+  }
+  .toc-label{
+    font-size:.68rem;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:.15rem;
+  }
+  .toc-group a{
+    display:flex;
+    align-items:center;
+    gap:.5rem;
+    text-decoration:none;
+    color:var(--text-dim);
+    font-size:.86rem;
+    padding:.28rem 0;
+    border-left:2px solid transparent;
+    padding-left:.6rem;
+    margin-left:-.6rem;
+    transition:color .12s ease, border-color .12s ease;
+  }
+  .toc-group a:hover{color:var(--text);}
+  .toc-group a.active{color:var(--text); border-left-color:var(--accent); font-weight:600;}
+  .toc-group a .mono{font-size:.76rem; color:var(--text-faint);}
+
+  .m-chip{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:2.6rem;
+    padding:.05rem .35rem;
+    border-radius:4px;
+    font-family:"JetBrains Mono";
+    font-size:.66rem;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .m-get{color:var(--get); background:var(--get-soft);}
+  .m-post{color:var(--post); background:var(--post-soft);}
+  .m-put{color:var(--put); background:var(--put-soft);}
+  .m-delete{color:var(--delete); background:var(--delete-soft);}
+
+  /* ---- Main content ---- */
+  main{min-width:0;}
+  .content-col{max-width:760px;}
+
+  header.doc-head{
+    display:flex;
+    flex-direction:column;
+    gap:.9rem;
+    padding-bottom:2.25rem;
+    border-bottom:1px solid var(--border);
+    margin-bottom:2.5rem;
+  }
+  .eyebrow{
+    font-size:.72rem;
+    font-weight:700;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  h1.title{font-size:2.15rem; font-weight:800; letter-spacing:-.02em;}
+  .dek{color:var(--text-dim); font-size:1.02rem; max-width:60ch;}
+  .base-url{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+    align-self:flex-start;
+    margin-top:.35rem;
+    padding:.5rem .8rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+  }
+  .base-url .tag{
+    font-size:.66rem;
+    font-weight:700;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+  }
+  .base-url code{font-size:.86rem; color:var(--text);}
+
+  section.block{
+    margin-bottom:3rem;
+    scroll-margin-top:2rem;
+  }
+  section.block > h2{
+    font-size:1.3rem;
+    font-weight:800;
+    letter-spacing:-.01em;
+    margin-bottom:.75rem;
+  }
+  section.block > .lede{
+    color:var(--text-dim);
+    max-width:62ch;
+    margin-bottom:1.1rem;
+  }
+
+  .auth-card{
+    display:flex;
+    gap:1rem;
+    padding:1.1rem 1.25rem;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:10px;
+    box-shadow:var(--shadow);
+  }
+  .auth-card .icon{
+    font-family:"JetBrains Mono";
+    font-weight:700;
+    font-size:.7rem;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    border-radius:6px;
+    padding:.35rem .5rem;
+    height:fit-content;
+  }
+  .auth-card .body{display:flex; flex-direction:column; gap:.35rem;}
+  .auth-card h3{font-size:.95rem; font-weight:700;}
+  .auth-card p, .auth-card .example{color:var(--text-dim); font-size:.9rem;}
+  .auth-card .example{
+    margin-top:.25rem;
+    background:var(--code-bg);
+    color:var(--code-text);
+    border:1px solid var(--code-border);
+    border-radius:6px;
+    padding:.55rem .75rem;
+    font-family:"JetBrains Mono";
+    font-size:.78rem;
+    overflow-x:auto;
+  }
+
+  /* ---- Endpoint card ---- */
+  .endpoint{
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    margin-bottom:1.75rem;
+    scroll-margin-top:2rem;
+  }
+  .endpoint-head{
+    display:flex;
+    align-items:center;
+    gap:.7rem;
+    padding:1rem 1.25rem;
+    border-bottom:1px solid var(--border);
+    background:var(--surface-2);
+    flex-wrap:wrap;
+  }
+  .endpoint-head .m-chip{min-width:3.4rem; font-size:.72rem; padding:.2rem .4rem;}
+  .endpoint-head .path{font-size:.95rem; font-weight:500; color:var(--text);}
+  .endpoint-head .summary{
+    margin-left:auto;
+    color:var(--text-faint);
+    font-size:.82rem;
+    font-family:"Source Sans 3";
+  }
+  .endpoint-body{padding:1.25rem 1.25rem 1.5rem;}
+  .endpoint-desc{color:var(--text-dim); margin-bottom:1.1rem; max-width:60ch;}
+
+  h4.sub{
+    font-family:"Manrope";
+    font-size:.78rem;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    margin-bottom:.6rem;
+  }
+  .sub-block{margin-bottom:1.35rem;}
+  .sub-block:last-child{margin-bottom:0;}
+
+  table.params{
+    width:100%;
+    border-collapse:collapse;
+    font-size:.86rem;
+  }
+  table.params th{
+    text-align:left;
+    font-family:"Manrope";
+    font-size:.7rem;
+    font-weight:700;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    padding:0 .6rem .5rem 0;
+    border-bottom:1px solid var(--border);
+  }
+  table.params td{
+    padding:.55rem .6rem .55rem 0;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+    color:var(--text-dim);
+  }
+  table.params tr:last-child td{border-bottom:none;}
+  table.params td.name{
+    font-family:"JetBrains Mono";
+    font-size:.82rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  table.params td.type{
+    font-family:"JetBrains Mono";
+    font-size:.78rem;
+    color:var(--accent-ink);
+    white-space:nowrap;
+  }
+  .req-flag{
+    display:inline-block;
+    font-family:"JetBrains Mono";
+    font-size:.68rem;
+    font-weight:700;
+    color:var(--delete);
+  }
+  .opt-flag{
+    display:inline-block;
+    font-family:"JetBrains Mono";
+    font-size:.68rem;
+    color:var(--text-faint);
+  }
+
+  .overflow-x{overflow-x:auto;}
+
+  .curl-block{
+    position:relative;
+    background:var(--code-bg);
+    border:1px solid var(--code-border);
+    border-radius:8px;
+    overflow-x:auto;
+  }
+  .curl-block pre{
+    margin:0;
+    padding:.85rem 3rem .85rem .95rem;
+    font-family:"JetBrains Mono";
+    font-size:.78rem;
+    line-height:1.65;
+    color:var(--code-text);
+    white-space:pre;
+  }
+  .curl-block .flag{color:#8fb8ff;}
+  .curl-block .str{color:#9fe3ae;}
+  .curl-block .cmd{color:#f0b866;}
+  .curl-copy{
+    position:absolute;
+    top:.55rem;
+    right:.55rem;
+    font-family:"JetBrains Mono";
+    font-size:.66rem;
+    font-weight:500;
+    letter-spacing:.02em;
+    color:var(--text-faint);
+    background:rgba(255,255,255,.06);
+    border:1px solid var(--code-border);
+    border-radius:5px;
+    padding:.25rem .5rem;
+    cursor:pointer;
+    transition:color .12s ease, background .12s ease;
+  }
+  .curl-copy:hover{color:var(--code-text); background:rgba(255,255,255,.12);}
+  .curl-copy:focus-visible{outline:2px solid var(--accent); outline-offset:1px;}
+
+  .status-row{display:flex; gap:.7rem; align-items:baseline;}
+  .status-code{
+    font-family:"JetBrains Mono";
+    font-weight:700;
+    font-size:.86rem;
+    min-width:2.6rem;
+  }
+  .s2{color:var(--post);}
+  .s4{color:var(--put);}
+  .s5{color:var(--delete);}
+  .status-desc{color:var(--text-dim); font-size:.86rem;}
+  .status-schema{
+    margin-left:auto;
+    font-family:"JetBrains Mono";
+    font-size:.76rem;
+    color:var(--text-faint);
+  }
+  .status-list{display:flex; flex-direction:column; gap:.55rem;}
+
+  /* ---- Schemas ---- */
+  .schema-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+    gap:1.1rem;
+  }
+  .schema-card{
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    box-shadow:var(--shadow);
+    padding:1.1rem 1.2rem;
+  }
+  .schema-card h3{
+    font-family:"JetBrains Mono";
+    font-size:.92rem;
+    font-weight:700;
+    color:var(--text);
+    margin-bottom:.15rem;
+  }
+  .schema-card .note{font-size:.78rem; color:var(--text-faint); margin-bottom:.75rem;}
+  .field-row{
+    display:flex;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:.4rem 0;
+    border-top:1px solid var(--border);
+    font-size:.84rem;
+  }
+  .field-row:first-of-type{border-top:none;}
+  .field-name{font-family:"JetBrains Mono"; color:var(--text);}
+  .field-type{font-family:"JetBrains Mono"; color:var(--accent-ink); text-align:right;}
+
+  footer.doc-foot{
+    margin-top:3rem;
+    padding-top:1.5rem;
+    border-top:1px solid var(--border);
+    color:var(--text-faint);
+    font-size:.8rem;
+  }
+
+  @media (max-width: 860px){
+    .shell{grid-template-columns:1fr; padding-top:1.75rem;}
+    .sidebar{
+      position:static;
+      border-bottom:1px solid var(--border);
+      padding-bottom:1.25rem;
+    }
+    nav.toc{flex-direction:row; flex-wrap:wrap; padding-top:1rem; gap:1.1rem;}
+    .toc-group{flex-direction:row; flex-wrap:wrap; align-items:center; gap:.6rem;}
+    .toc-label{width:100%;}
+  }
+</style>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="mark">Products API</span>
+      <span class="ver mono">v1.0.0 · OpenAPI 3.0</span>
+    </div>
+    <nav class="toc">
+      <div class="toc-group">
+        <span class="toc-label">Guide</span>
+        <a href="#overview">Overview</a>
+        <a href="#auth">Authentication</a>
+      </div>
+      <div class="toc-group">
+        <span class="toc-label">Products</span>
+        <a href="#get-products"><span class="m-chip m-get">GET</span><span class="mono">/products</span></a>
+        <a href="#post-products"><span class="m-chip m-post">POST</span><span class="mono">/products</span></a>
+        <a href="#get-product"><span class="m-chip m-get">GET</span><span class="mono">/products/{id}</span></a>
+        <a href="#put-product"><span class="m-chip m-put">PUT</span><span class="mono">/products/{id}</span></a>
+        <a href="#delete-product"><span class="m-chip m-delete">DEL</span><span class="mono">/products/{id}</span></a>
+      </div>
+      <div class="toc-group">
+        <span class="toc-label">Reference</span>
+        <a href="#schemas">Schemas</a>
+      </div>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="content-col">
+      <header class="doc-head" id="overview">
+        <span class="eyebrow">API Reference</span>
+        <h1 class="title">Products API</h1>
+        <p class="dek">Endpoints for listing, creating, updating, and removing products. All request and response bodies are JSON.</p>
+        <div class="base-url">
+          <span class="tag">Base URL</span>
+          <code>https://api.xime.com/v1</code>
+        </div>
+      </header>
+
+      <section class="block" id="auth">
+        <h2>Authentication</h2>
+        <p class="lede">Every endpoint on this page requires authentication. Requests without valid credentials receive a <code class="mono">401 Unauthorized</code> response.</p>
+        <div class="auth-card">
+          <span class="icon mono">AUTH</span>
+          <div class="body">
+            <h3>HTTP Basic Authentication</h3>
+            <p>Send credentials in the <code class="mono">Authorization</code> header on every request, base64-encoded as <code class="mono">username:password</code>.</p>
+            <div class="example">Authorization: Basic bGVhZjpwcm9kdWN0LWtleQ==</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="get-products">
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="m-chip m-get">GET</span>
+            <span class="path mono">/products</span>
+            <span class="summary">Get all products</span>
+          </div>
+          <div class="endpoint-body">
+            <p class="endpoint-desc">Returns a list of products. Use the query parameters below to filter by category or control how many results come back.</p>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Query Parameters</h4>
+              <table class="params">
+                <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">category</td><td class="type">string</td><td>Filter the products by category. <span class="opt-flag">optional</span></td></tr>
+                  <tr><td class="name">limit</td><td class="type">integer</td><td>The number of products per page. <span class="opt-flag">optional</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">cURL</h4>
+              <div class="curl-block" data-copy="curl -u &quot;user:password&quot; \
+  &quot;https://api.xime.com/v1/products?category=footwear&amp;limit=20&quot;"><pre><span class="cmd">curl</span> <span class="flag">-u</span> <span class="str">"user:password"</span> \
+  <span class="str">"https://api.xime.com/v1/products?category=footwear&limit=20"</span></pre><button class="curl-copy" type="button" onclick="copyCurl(this)">Copy</button></div>
+            </div>
+
+            <div class="sub-block">
+              <h4 class="sub">Responses</h4>
+              <div class="status-list">
+                <div class="status-row"><span class="status-code s2">200</span><span class="status-desc">A list of products.</span></div>
+                <div class="status-row"><span class="status-code s4">401</span><span class="status-desc">Unauthorized.</span></div>
+                <div class="status-row"><span class="status-code s5">500</span><span class="status-desc">Internal Server Error.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="post-products">
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="m-chip m-post">POST</span>
+            <span class="path mono">/products</span>
+            <span class="summary">Create a new product</span>
+          </div>
+          <div class="endpoint-body">
+            <p class="endpoint-desc">Creates a product from the fields below and returns the newly created record.</p>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Request Body — <span class="mono" style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-faint);">ProductInput</span></h4>
+              <table class="params">
+                <thead><tr><th>Field</th><th>Type</th><th>Required</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">name</td><td class="type">string</td><td><span class="req-flag">required</span></td></tr>
+                  <tr><td class="name">description</td><td class="type">string</td><td><span class="req-flag">required</span></td></tr>
+                  <tr><td class="name">price</td><td class="type">number</td><td><span class="req-flag">required</span></td></tr>
+                  <tr><td class="name">category</td><td class="type">string</td><td><span class="req-flag">required</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">cURL</h4>
+              <div class="curl-block" data-copy="curl -u &quot;user:password&quot; \
+  -X POST &quot;https://api.xime.com/v1/products&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;name&quot;: &quot;Trail Runner 2&quot;,
+    &quot;description&quot;: &quot;Lightweight trail running shoe&quot;,
+    &quot;price&quot;: 129.99,
+    &quot;category&quot;: &quot;footwear&quot;
+  }'"><pre><span class="cmd">curl</span> <span class="flag">-u</span> <span class="str">"user:password"</span> \
+  <span class="flag">-X</span> POST <span class="str">"https://api.xime.com/v1/products"</span> \
+  <span class="flag">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="str">'{
+    "name": "Trail Runner 2",
+    "description": "Lightweight trail running shoe",
+    "price": 129.99,
+    "category": "footwear"
+  }'</span></pre><button class="curl-copy" type="button" onclick="copyCurl(this)">Copy</button></div>
+            </div>
+
+            <div class="sub-block">
+              <h4 class="sub">Responses</h4>
+              <div class="status-list">
+                <div class="status-row"><span class="status-code s2">201</span><span class="status-desc">Product created successfully.</span><span class="status-schema mono">→ Product</span></div>
+                <div class="status-row"><span class="status-code s4">400</span><span class="status-desc">Bad Request.</span></div>
+                <div class="status-row"><span class="status-code s4">401</span><span class="status-desc">Unauthorized.</span></div>
+                <div class="status-row"><span class="status-code s5">500</span><span class="status-desc">Internal Server Error.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="get-product">
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="m-chip m-get">GET</span>
+            <span class="path mono">/products/{productId}</span>
+            <span class="summary">Get product by ID</span>
+          </div>
+          <div class="endpoint-body">
+            <p class="endpoint-desc">Returns a single product by its identifier.</p>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Path Parameters</h4>
+              <table class="params">
+                <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">productId</td><td class="type">string</td><td>ID of the product to retrieve. <span class="req-flag">required</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">cURL</h4>
+              <div class="curl-block" data-copy="curl -u &quot;user:password&quot; \
+  &quot;https://api.xime.com/v1/products/prod_8f21c&quot;"><pre><span class="cmd">curl</span> <span class="flag">-u</span> <span class="str">"user:password"</span> \
+  <span class="str">"https://api.xime.com/v1/products/prod_8f21c"</span></pre><button class="curl-copy" type="button" onclick="copyCurl(this)">Copy</button></div>
+            </div>
+
+            <div class="sub-block">
+              <h4 class="sub">Responses</h4>
+              <div class="status-list">
+                <div class="status-row"><span class="status-code s2">200</span><span class="status-desc">The requested product.</span><span class="status-schema mono">→ Product</span></div>
+                <div class="status-row"><span class="status-code s4">401</span><span class="status-desc">Unauthorized.</span></div>
+                <div class="status-row"><span class="status-code s4">404</span><span class="status-desc">Not Found.</span></div>
+                <div class="status-row"><span class="status-code s5">500</span><span class="status-desc">Internal Server Error.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="put-product">
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="m-chip m-put">PUT</span>
+            <span class="path mono">/products/{productId}</span>
+            <span class="summary">Update product</span>
+          </div>
+          <div class="endpoint-body">
+            <p class="endpoint-desc">Replaces the fields of an existing product.</p>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Path Parameters</h4>
+              <table class="params">
+                <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">productId</td><td class="type">string</td><td>ID of the product to update. <span class="req-flag">required</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Request Body — <span class="mono" style="font-weight:400; text-transform:none; letter-spacing:0; color:var(--text-faint);">ProductUpdateInput</span></h4>
+              <table class="params">
+                <thead><tr><th>Field</th><th>Type</th><th>Required</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">name</td><td class="type">string</td><td><span class="opt-flag">optional</span></td></tr>
+                  <tr><td class="name">description</td><td class="type">string</td><td><span class="opt-flag">optional</span></td></tr>
+                  <tr><td class="name">price</td><td class="type">number</td><td><span class="opt-flag">optional</span></td></tr>
+                  <tr><td class="name">category</td><td class="type">string</td><td><span class="opt-flag">optional</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">cURL</h4>
+              <div class="curl-block" data-copy="curl -u &quot;user:password&quot; \
+  -X PUT &quot;https://api.xime.com/v1/products/prod_8f21c&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  -d '{
+    &quot;price&quot;: 119.99
+  }'"><pre><span class="cmd">curl</span> <span class="flag">-u</span> <span class="str">"user:password"</span> \
+  <span class="flag">-X</span> PUT <span class="str">"https://api.xime.com/v1/products/prod_8f21c"</span> \
+  <span class="flag">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="flag">-d</span> <span class="str">'{
+    "price": 119.99
+  }'</span></pre><button class="curl-copy" type="button" onclick="copyCurl(this)">Copy</button></div>
+            </div>
+
+            <div class="sub-block">
+              <h4 class="sub">Responses</h4>
+              <div class="status-list">
+                <div class="status-row"><span class="status-code s2">200</span><span class="status-desc">Product updated successfully.</span><span class="status-schema mono">→ Product</span></div>
+                <div class="status-row"><span class="status-code s4">400</span><span class="status-desc">Bad Request.</span></div>
+                <div class="status-row"><span class="status-code s4">401</span><span class="status-desc">Unauthorized.</span></div>
+                <div class="status-row"><span class="status-code s4">404</span><span class="status-desc">Not Found.</span></div>
+                <div class="status-row"><span class="status-code s5">500</span><span class="status-desc">Internal Server Error.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="delete-product">
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="m-chip m-delete">DEL</span>
+            <span class="path mono">/products/{productId}</span>
+            <span class="summary">Delete product</span>
+          </div>
+          <div class="endpoint-body">
+            <p class="endpoint-desc">Permanently removes a product. This cannot be undone.</p>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">Path Parameters</h4>
+              <table class="params">
+                <thead><tr><th>Name</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td class="name">productId</td><td class="type">string</td><td>ID of the product to delete. <span class="req-flag">required</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="sub-block overflow-x">
+              <h4 class="sub">cURL</h4>
+              <div class="curl-block" data-copy="curl -u &quot;user:password&quot; \
+  -X DELETE &quot;https://api.xime.com/v1/products/prod_8f21c&quot;"><pre><span class="cmd">curl</span> <span class="flag">-u</span> <span class="str">"user:password"</span> \
+  <span class="flag">-X</span> DELETE <span class="str">"https://api.xime.com/v1/products/prod_8f21c"</span></pre><button class="curl-copy" type="button" onclick="copyCurl(this)">Copy</button></div>
+            </div>
+
+            <div class="sub-block">
+              <h4 class="sub">Responses</h4>
+              <div class="status-list">
+                <div class="status-row"><span class="status-code s2">204</span><span class="status-desc">No Content — the product was deleted.</span></div>
+                <div class="status-row"><span class="status-code s4">401</span><span class="status-desc">Unauthorized.</span></div>
+                <div class="status-row"><span class="status-code s4">404</span><span class="status-desc">Not Found.</span></div>
+                <div class="status-row"><span class="status-code s5">500</span><span class="status-desc">Internal Server Error.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="schemas" style="margin-bottom:1rem;">
+        <h2>Schemas</h2>
+        <p class="lede">Object shapes referenced by the endpoints above.</p>
+        <div class="schema-grid">
+          <div class="schema-card">
+            <h3>Product</h3>
+            <p class="note">Returned by GET, POST, and PUT responses.</p>
+            <div class="field-row"><span class="field-name">name</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">description</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">price</span><span class="field-type">number</span></div>
+            <div class="field-row"><span class="field-name">category</span><span class="field-type">string</span></div>
+          </div>
+          <div class="schema-card">
+            <h3>ProductInput</h3>
+            <p class="note">Request body for POST /products. All fields required.</p>
+            <div class="field-row"><span class="field-name">name</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">description</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">price</span><span class="field-type">number</span></div>
+            <div class="field-row"><span class="field-name">category</span><span class="field-type">string</span></div>
+          </div>
+          <div class="schema-card">
+            <h3>ProductUpdateInput</h3>
+            <p class="note">Request body for PUT /products/{productId}. All fields optional.</p>
+            <div class="field-row"><span class="field-name">name</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">description</span><span class="field-type">string</span></div>
+            <div class="field-row"><span class="field-name">price</span><span class="field-type">number</span></div>
+            <div class="field-row"><span class="field-name">category</span><span class="field-type">string</span></div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="doc-foot">
+        Generated from <code class="mono">api-specs/api-v1.yaml</code> · OpenAPI 3.0.0
+      </footer>
+    </div>
+  </main>
+</div>
+
+<script>
+  function copyCurl(btn){
+    try{
+      var block = btn.closest('.curl-block');
+      var text = block.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(function(){
+        var prev = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function(){ btn.textContent = prev; }, 1400);
+      });
+    }catch(e){}
+  }
+  (function(){
+    try{
+      var links = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+      var targets = links.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+      if(!('IntersectionObserver' in window) || !targets.length) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var id = '#' + entry.target.id;
+          var link = links.find(function(a){ return a.getAttribute('href') === id; });
+          if(!link) return;
+          if(entry.isIntersecting){
+            links.forEach(function(a){ a.classList.remove('active'); });
+            link.classList.add('active');
+          }
+        });
+      }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+      targets.forEach(function(t){ io.observe(t); });
+    }catch(e){}
+  })();
+</script>
