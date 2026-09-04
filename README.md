@@ -2,11 +2,12 @@
 
 This README outlines how I automated an API Reference document using Claude and GitHub Codespaces. This repo contains the OpenAPI spec and the auto-generated API Reference doc, plus the workflow used to produce it.
 
-This is also to showcase an AI-assisted, docs-as-code, reproducible workflow for API documentation.
+This also showcases an AI-assisted, docs-as-code, reproducible workflow for API documentation.
 
 ## Prerequisites
+- A GitHub account and a Claude account/subscription (since Codespaces + Claude Code both require sign-in).
 
-OpenAPI YAML specification
+- OpenAPI YAML specification
 
 ## Steps
 
@@ -19,8 +20,9 @@ OpenAPI YAML specification
   `Generate an API Reference document from this OpenAPI YAML,
    with an Introduction, Authentication section, and one section
    per endpoint including request/response examples.`
-7. It autogenerates with an introduction, authentication, and your endpoints section. Additionally, you can prompt it to create cURL requests for each of the endpoints.
-8. I reviewed the generated content for accuracy against the spec. The "Human in the Loop".
+7. It autogenerates with an introduction, authentication, and your endpoints section.
+8. Additionally, you can prompt it to create cURL requests for each of the endpoints.
+9. I reviewed the generated content for accuracy against the spec. The "Human in the Loop" step to verify accuracy.
 
 ## Result
 This is what a generated API Reference looks like: https://htmlpreview.github.io/?https://raw.githubusercontent.com/janetjotw/api-automated/main/docs/products-api-reference.html
